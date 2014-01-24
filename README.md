@@ -40,6 +40,21 @@ Since the CSV specification allows the last line of the input to be unterminated
 
 ## Example:
 
+Incrementally parse a CSV downloaded from some URL:
+
+```javascript
+var csv = new IncrementalCSV(
+  function onrecord(rec, idx) {
+    // process your data here.
+    // idx is zero-based, skip if there's a header.
+    console.log(idx, "->", rec);
+  }
+);
+
+url = 'https://extranet.who.int/tme/generateCSV.asp?ds=dictionary';
+csv.push(HTTP.get(url).content);
+```
+
 Incrementally parse a CSV file uploaded using Chris Mather's [EventedMind File Uploader](https://github.com/EventedMind/meteor-file).
 
 ```javascript
@@ -74,6 +89,11 @@ if (Meteor.isServer) {
   });
 }
 ```
+
+## Limitations
+
+* onRecord will return a simple array of values; there's no way to detect the header line or manually specify fields so as to have key-value pairs (objects) returned
+* newlines in values - TBD
 
 ## Credit:
 
